@@ -25,7 +25,7 @@ let appData = {
             let a = prompt("Введите обязательную статью расходов в этом месяце", ''),
                 b = prompt("Во сколько обойдется?", '');
 
-            if ((typeof (a) === "string") && (a != null) && (b != null) && a != "" && b != '' && a.length < 50 && (!isNaN(b))) {
+            if ((isNaN(a)) && (a != null) && (b != null) && a != "" && b != '' && a.length < 50 && (!isNaN(b))) {
                 appData.expenses[a] = b;
             } else {
                 alert('Ввели  неправильное значение');
@@ -37,7 +37,7 @@ let appData = {
     },
     detectDayBudget: function () {
         appData.moneyPerDay = (appData.budget / 30).toFixed(3)
-        alert("Ваш  бюджет на день  " + appData.moneyPerDay + " ")
+        alert("Бюджет на 1 день составляет " + appData.moneyPerDay + "руб.")
     },
     detectLevel: function () {
         if (appData.moneyPerDay < 100) {
@@ -79,38 +79,25 @@ let appData = {
         }
     },
 
-
     chooseIncome: function () {
 
-        for (let i = 0; i < 1; i++) {
+        let items = prompt("Что принесет дополнительный доход? (Перечислите через запятую)", "");
 
-            let items = prompt('Введите дополнительный доход через запятую', '');
-            appData.income = items.split(', ');
-
-            appData.income.push (prompt('Может вы что-то забыли ?', ));
-            console.log(appData.income);
-
-            for (let key of appData.income) {
-
-                if ([key] == ''|| [key] == null|| !isNaN([key])) {
-                    alert('Неправильные значения')
-                    appData.income.length = 0;
-                    i--;
-                    console.log(appData.income);
-                    break;
-                }  
-                           }
-            
+        if (typeof(items) != "string" || items == "" || typeof(items) == null) {
+            console.log("Вы ввели некорректные данные или не ввели их вовсе");
+        } else {
+            appData.income = items.split(", ");
+            appData.income.push(prompt("Может что-то еще?"));
+            appData.income.sort();
         }
 
-      appData.income.forEach ((item, count  ) => {
-         alert( `Способы доп. заработка: ${item}  порядковый номер ${count}`)
+            appData.income.forEach((item, count) => {
+            count = 1 + count;
+            alert(` ${count} Способы доп. заработка: ${item}   `);
+        })
+    },
+};
 
-      })
-      
-
-    }
-    
-
-
+for (let key  in appData) {
+    console.log ("Наша программа включает в себя данные: " + key + " - " + appData[key] )
 }
