@@ -31,8 +31,15 @@ let appData = {
     timeData: time,
     savings: false,
 };
+expensesBtn.disabled = true;
+optionalExpensesBtn.disabled = true;
+countBtn.disabled = true;
+   
+     
 
 startBtn.addEventListener('click', function () {
+
+    
     money = +prompt("Ваш бюджет на месяц?", ''),
     time = prompt('Введите дату в формате YYYY-MM-DD', '');
 
@@ -41,34 +48,40 @@ startBtn.addEventListener('click', function () {
     }
     appData.budget = money;
     appData.timeData = time;
+    expensesBtn.disabled = false;
+    optionalExpensesBtn.disabled = false;
+    countBtn.disabled = false;
+   
 
     budgetValue.textContent = appData.budget + " руб.";
     yearValue.value = new Date(Date.parse(time)).getFullYear();
     monthValue.value = new Date(Date.parse(time)).getMonth() + 1;
     dayValue.value = new Date(Date.parse(time)).getDate();
 });
+    
+    expensesBtn.addEventListener('click', function () {
+       
+        let sum = 0;
+         
+        for (let i = 0; i < expensesItem.length; i++) {
+                let a, b;
+                a = expensesItem[i].value;
+                b = expensesItem[++i].value;
+                if ((isNaN(a)) && (a != null) && (b != null) && a != "" && b != '' && a.length < 25 && (!isNaN(b))) {
+                    appData.expenses[a] = +b;
+                    sum +=+b;
+                } else {
+                    alert('Ввели  неправильное значение');
+                    expensesItem.length = 0;
+                    appData.expenses.length = 0;
+                    sum = 0;
+                    break;
+                }    
+        }
+        expensesValue.textContent = sum.toFixed(2) ;
+    });
 
-expensesBtn.addEventListener('click', function () {
-   
-    let sum = 0;
-     
-    for (let i = 0; i < expensesItem.length; i++) {
-            let a, b;
-            a = expensesItem[i].value;
-            b = expensesItem[++i].value;
-            if ((isNaN(a)) && (a != null) && (b != null) && a != "" && b != '' && a.length < 25 && (!isNaN(b))) {
-                appData.expenses[a] = b;
-                sum += +b;
-            } else {
-                alert('Ввели  неправильное значение');
-                expensesItem.length = 0;
-                appData.expenses.length = 0;
-                sum = 0;
-                break;
-            }    
-    }
-    expensesValue.textContent = sum.toFixed(2) + ' руб.';
-});
+
 
 
 optionalExpensesBtn.addEventListener('click', function () {
@@ -84,15 +97,14 @@ optionalExpensesBtn.addEventListener('click', function () {
            appData.optionalExpenses = 0;
            optionalExpensesValue.textContent  = '';
            break
-            
-        }
+         }
     }
 });
 
 countBtn.addEventListener('click', function () {
 
     if (appData.budget != undefined) {
-        appData.moneyPerDay = (appData.budget / 30).toFixed(2);
+        appData.moneyPerDay =((appData.budget- (expensesValue.textContent ))  / 30).toFixed(2);
         dayBudgetValue.textContent = appData.moneyPerDay + " руб.";
         if (appData.moneyPerDay < 1000) {
             levelValue.textContent = ('У вас низкий уровень достатка ')
